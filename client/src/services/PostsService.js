@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Api from '@/services/Api'
 
 export default {
@@ -7,5 +9,17 @@ export default {
 
   addPost (params) {
     return Api().post('posts', params)
+  },
+
+  updatePost (params) {
+    return Api().put('posts/' + params.id, params + '/edit')
+  },
+
+  getPost (params) {
+    return Api().get('posts/' + params.id + '/edit')
+  },
+
+  deletePost (id) {
+    return Api().delete('posts/' + id)
   }
 }

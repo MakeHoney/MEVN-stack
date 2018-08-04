@@ -43,9 +43,46 @@ app.post('/posts', (req, res) => {
 
 app.get('/posts', (req, res) => {
   Post.find({}, 'title description', (error, posts) => {
-    if(error) { console.log(error); }
+    if(error) { console.error(error); }
     res.send({
       posts: posts
     });
   }).sort( {_id: -1} );
+});
+
+app.get('/posts/:id/edit', (req, res) => {
+  var db = req.db;
+  Post.findById(req.params.id, 'title description', function (error, post) {
+    if (error) { console.error(error); }
+    res.send(post)
+  })
+});
+
+app.put('/posts/:id/edit', (req, res) => {
+  let db = req.db;
+  Post.findById(req.params.id, 'title description', (error, post) => {
+    if(error) { console.error(error); }
+
+    post.title = req.body.title;
+    post.description = req.body.description;
+    post.save(error => {
+      if(error) {
+        console.error(error);
+      }
+      res.send({ success: true });
+    });
+  });
+});
+
+app.delete('/posts/:id', (req, res) => {
+  var db = req.db;
+  Post.remove({
+    _id: req.params.id
+  }, function(err, post){
+    if (err)
+      res.send(err)
+    res.send({
+      success: true
+    });
+  });
 });
