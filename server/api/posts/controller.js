@@ -1,19 +1,27 @@
-const express = require('express');
-const Post = require('../models/post');
+const Post = require('../../models/post');
 
-const router = express.Router();
-
-router.get('/', (req, res, next) => {
+// GET /posts
+exports.loadPostlist = (req, res, next) => {
   Post.find({}, 'title description', (err, posts) => {
     if(err) res.send({ success: false });
     res.send({
       posts: posts
     });
   }).sort( {_id: -1 });
-});
+};
 
 
-router.post('/', (req, res, next) => {
+// GET /posts/:id/edit
+exports.loadPostProperty = (req, res, next) => {
+  let db = req.db;
+  Post.findById(req.params.id, 'title description', (err, post) => {
+    if(err) res.send({ success: false });
+    res.send(post);
+  });
+}
+
+// POST /posts
+exports.saveNewPost = (req, res, next) => {
   let db = req.db;
   let title = req.body.title;
   let description = req.body.description;
@@ -29,18 +37,12 @@ router.post('/', (req, res, next) => {
       message: 'Post saved successfully!'
     });
   });
-});
+};
 
-router.get('/:id/edit', (req, res, next) => {
+// PUT /posts/:id/edit
+exports.saveEditPost = (req, res, next) => {
   let db = req.db;
-  Post.findById(req.params.id, 'title description', (err, post) => {
-    if(err) res.send({ success: false });
-    res.send(post);
-  });
-});
-
-router.put('/:id/edit', (req, res, next) => {
-  let db = req.db;
+  console.log("asdfkljalksdjfkljasdklfjksadf");
   Post.findById(req.params.id, 'title description', (err, post) => {
     if(err) res.send({ success: false });
     post.title = req.body.title;
@@ -50,9 +52,10 @@ router.put('/:id/edit', (req, res, next) => {
       res.send({ success: true });
     });
   });
-});
+};
 
-router.delete('/:id', (req, res, next) => {
+// DELETE /posts/:id
+exports.deletePost = (req, res, next) => {
   let db = req.db;
   Post.remove({
     _id: req.params.id
@@ -60,6 +63,4 @@ router.delete('/:id', (req, res, next) => {
     if(err) res.send({ success: false });
     res.send({ success: true });
   });
-});
-
-module.exports = router;
+};

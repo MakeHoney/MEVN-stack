@@ -12,11 +12,11 @@ export default {
   },
 
   updatePost (params) {
-    return Api().put('posts/' + params.id, params + '/edit')
+    return Api().put(`posts/${params.id}/edit`, params)
   },
 
   getPost (params) {
-    return Api().get('posts/' + params.id + '/edit')
+    return Api().get(`posts/${params.id}/edit`)
   },
 
   deletePost (id) {
